@@ -45,8 +45,8 @@ def roulette_wheel(parents):
     values_lists = list(values_proto)
     total_fitness = sum(values_lists[0])
 
-    parent1 = pick(values_lists, total_fitness) 
-    parent2 = pick(values_lists, total_fitness, parent1)
+    parent1 = wheel_builder(values_lists, total_fitness) 
+    parent2 = wheel_builder(values_lists, total_fitness, parent1)
 
     parent1 = values_lists[1][parent1]
     parent2 = values_lists[1][parent2]
@@ -55,17 +55,17 @@ def roulette_wheel(parents):
 
 
 # Helper da função roulette_wheel, cria a "roleta" para o sorteio:
-def pick(values_list, total_fitness, already_accessed_index=-1):
+def wheel_builder(values_list, total_fitness, previous_parent=-1):
 
     wheel = []
     accumulator = 0
     picked_value = random()
 
-    if already_accessed_index != -1:
-        total_fitness -= values_list[0][already_accessed_index]
+    if previous_parent != -1:
+        total_fitness -= values_list[0][previous_parent]
 
     for index, value in enumerate(values_list[0]):
-        if already_accessed_index == index:
+        if previous_parent == index:
             continue
         accumulator += value
         if total_fitness == 0:
