@@ -57,13 +57,12 @@ def roulette_wheel(parents):
 
 # Helper da função roulette_wheel, cria a "roleta" para o sorteio:
 def wheel_builder(sfc_list, total_fitness, previous_parent_index=-1):
-    
+
     fitness_values = sfc_list[0]
 
     # Anti-elitismo
     if previous_parent_index != -1:
         total_fitness -= fitness_values[previous_parent_index]
-    
     wheel = []
 
     picked_value = random()
@@ -77,7 +76,6 @@ def wheel_builder(sfc_list, total_fitness, previous_parent_index=-1):
         # Anti-divisão-por-zero:
         if total_fitness == 0:
             total_fitness = 0.000000000001
-            
         wheel.append(accumulated_values/total_fitness)
 
         # Se for maior que o número aleatório entre 0 e 1, retorna o índice desse pai!
@@ -86,13 +84,15 @@ def wheel_builder(sfc_list, total_fitness, previous_parent_index=-1):
 
 
 # Função responsável pela evolução:
-def evolve(pop, max_carry_weight, available_items_to_choose_from, chromosomes_per_generation, best_chromosome, mutate_value=0.10):
+def evolve(pop, max_carry_weight, available_items_to_choose_from, 
+           chromosomes_per_generation, best_chromosome, mutate_value=0.01):
 
     parents = []
     for chromosome in pop:
-        if(fitness(chromosome, max_carry_weight, available_items_to_choose_from) is not False): 
-            parents.append([fitness(chromosome, max_carry_weight, available_items_to_choose_from), chromosome])
-            
+        if(fitness(chromosome, max_carry_weight,
+                   available_items_to_choose_from) is not False): 
+            parents.append([fitness(chromosome, max_carry_weight,
+                                     available_items_to_choose_from), chromosome])         
     parents.sort(reverse=True)
     if parents[0][0] > best_chromosome[0]:
         best_chromosome = parents[0]
@@ -101,7 +101,6 @@ def evolve(pop, max_carry_weight, available_items_to_choose_from, chromosomes_pe
     mutate(children, mutate_value)
 
     return children, best_chromosome
-
 
 # Função para a etapa de reprodução:
 def reproduce(parents, chromosomes_per_generation):
@@ -114,9 +113,7 @@ def reproduce(parents, chromosomes_per_generation):
         half_of_the_genes = len(parent1) // 2
         child = parent1[:half_of_the_genes] + parent2[half_of_the_genes:]
         children.append(child)
-    
     return children
-
 
 # Função para a etapa de mutação:
 def mutate(children, mutate_value):
@@ -139,3 +136,4 @@ def fitness_average(pop, max_carry_weight, available_items_to_choose_from):
             summed += fitness(x, max_carry_weight, available_items_to_choose_from)
         
     return summed / (len(pop) * 1.0)
+
